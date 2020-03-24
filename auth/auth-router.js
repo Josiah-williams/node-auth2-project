@@ -2,7 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const Users = require("../users/users-model.js");
+const Users = require("../users/users-model");
 
 function makeToken(user) {
 	const payload = {
@@ -25,7 +25,7 @@ function makeToken(user) {
 
 // for endpoints beginning with /api/auth
 router.post("/register", (req, res) => {
-	let user = req.body;
+	const user = req.body;
 	const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
 	user.password = hash;
 
@@ -34,12 +34,12 @@ router.post("/register", (req, res) => {
 			res.status(201).json(saved);
 		})
 		.catch(error => {
-			res.status(500).json(error);
+			res.status(500).json("invalid registery");
 		});
 });
 
 router.post("/login", (req, res) => {
-	let { username, password } = req.body;
+	const { username, password } = req.body;
 
 	Users.findBy({ username })
 		.first()
